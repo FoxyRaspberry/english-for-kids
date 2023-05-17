@@ -158,3 +158,43 @@ body {
 .switch__toggle-checkbox:checked ~ .switch__background {
   background: #7033FF;
 }
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.header__link-main-page {
+  list-style-type: none;
+}
+
+.header__icon-main-page {
+  display: block;
+  width: 40px;
+}
+
+.header__logo-title {
+  font-family: 'Itim';
+  font-style: normal;
+  font-weight: bold;
+  font-size: 49px;
+  line-height: 60px;
+  color: #3D3D3D;
+  margin: 0;
+}
+
+@media screen and (max-width: 767px) {
+  .header-container {
+    justify-content: center;
+  }
+
+  .header__icon-main-page {
+    width: 35px;
+  }
+
+  .header__logo-title {
+    font-size: 40px;
+  }
+}
