@@ -4,7 +4,9 @@
   "description": "English for kids - an application for learning English words for kids.",
   "main": "script.js",
   "scripts": {
+    "serve": "webpack serve --open --mode development",
     "dev": "webpack --mode development",
+    "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,6 +18,7 @@
   "devDependencies": {
     "html-webpack-plugin": "^5.5.1",
     "webpack": "^5.82.1",
-    "webpack-cli": "^5.1.1"
+    "webpack-cli": "^5.1.1",
+    "webpack-dev-server": "^4.15.0"
   }
 }
