@@ -4,6 +4,7 @@
   "description": "English for kids - an application for learning English words for kids.",
   "main": "script.js",
   "scripts": {
+    "dev": "webpack --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,6 +14,7 @@
   "author": "foxyraspberry",
   "license": "ISC",
   "devDependencies": {
+    "html-webpack-plugin": "^5.5.1",
     "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1"
   }
