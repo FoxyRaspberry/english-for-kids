@@ -1,0 +1,19 @@
+{
+  "name": "english-for-kids",
+  "version": "1.0.0",
+  "description": "English for kids - an application for learning English words for kids.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoxyRaspberry/english-for-kids"
+  },
+  "author": "foxyraspberry",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.82.1",
+    "webpack-cli": "^5.1.1"
+  }
+}
