@@ -1,0 +1,80 @@
+:root {
+  --color-one: #ffffff;
+  --color-two: #3D3D3D;
+  --color-three: #7033FF;
+}
+
+.wrapper__section {
+  margin: auto;
+  width: 300px;
+}
+
+@media screen and (min-width: 768px) {
+  .wrapper__section {
+    width: 708px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .wrapper__section {
+    width: 1200px;
+  }
+}
+
+.word-category-card__container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: auto;
+  cursor: pointer;
+  border-radius: 19px;
+}
+
+.word-category-card__container:hover {
+  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (min-width: 768px) {
+  .word-category-card__container {
+    width: 330px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .word-category-card__container {
+    width: 375px;
+  }
+}
+
+.word-category-card__image {
+  display: block;
+  width: auto;
+  border-radius: 19px 19px 0 0;
+}
+
+.word-category-card__category-description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-one);
+  border-radius: 0 0 19px 19px;
+}
+
+.word-category-card__category-name {
+  font-family: Itim;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--color-two);
+}
+
+.word-category-card__card-count {
+  font-family: Itim;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--color-three);
+}
