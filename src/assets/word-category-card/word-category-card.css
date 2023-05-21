@@ -4,23 +4,6 @@
   --color-three: #7033FF;
 }
 
-.wrapper__section {
-  margin: auto;
-  width: 300px;
-}
-
-@media screen and (min-width: 768px) {
-  .wrapper__section {
-    width: 708px;
-  }
-}
-
-@media screen and (min-width: 1280px) {
-  .wrapper__section {
-    width: 1200px;
-  }
-}
-
 .word-category-card__card-element-container {
   display: flex;
   flex-direction: column;
