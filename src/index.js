@@ -1,6 +1,8 @@
 import './style.css';
 import { categoriesMap } from './data/categories';
 import { createWordCategoryCard } from './assets/word-category-card/word-category-card';
+import { createWordCard } from './assets/word-card/word-card';
+
 
 function displayCategoryCards(categoriesMap, cardsContainerElement) {
   const cardsDocumentFragment = new DocumentFragment();
