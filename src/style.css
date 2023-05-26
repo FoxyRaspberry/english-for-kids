@@ -239,3 +239,17 @@ body {
     padding-top: 60px;
   }
 }
+
+.word-card-list__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+@media screen and (min-width: 768px) {
+  .word-card-list__container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

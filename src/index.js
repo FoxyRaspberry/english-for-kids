@@ -10,7 +10,7 @@ class CategoryCardListComponent {
   }
 
   // Private.
-  appendCards(categoriesMap, listElement) {
+  appendCategoryCards(categoriesMap, listElement) {
     const cardsDocumentFragment = new DocumentFragment();
     this.categoriesElementsMap = new Map();
     categoriesMap.forEach(category => {
@@ -21,11 +21,20 @@ class CategoryCardListComponent {
     listElement.appendChild(cardsDocumentFragment);
   }
 
+  appendWordCards(wordsMap, cardsContainerElement) {
+    const cardsDocumentFragment = new DocumentFragment();
+    wordsMap.forEach(word => {
+      const wordCardElement = createWordCard(word);
+      cardsDocumentFragment.appendChild(wordCardElement.element);
+    });
+    cardsContainerElement.appendChild(cardsDocumentFragment);
+  }
+
   // Первоначальная подготовка визуального представления.
   initializationView(categoriesMap) {
     this.listElement = document.createElement('div');
     this.listElement.classList.add('word-category-card__list-container');
-    this.appendCards(categoriesMap, this.listElement);
+    this.appendCategoryCards(categoriesMap, this.listElement);
     // Обработать все клики внутри элемента для вывода списка карточек.
     // Клики по карточкам интерпретировать как команду для отображения соответствующих карточек слов.
     this.listElement.addEventListener('click', (pointerEvent) => {
@@ -33,7 +42,10 @@ class CategoryCardListComponent {
       if (categoryCardElement) {
         const wordsMap = this.categoriesElementsMap.get(categoryCardElement).wordsMap;
         this.containerElement.innerHTML = '';
-        displayWordCards(wordsMap, this.containerElement);
+        const wordListElement = document.createElement('div');
+        wordListElement.classList.add('word-card-list__container');
+        this.appendWordCards(wordsMap, wordListElement);
+        this.containerElement.appendChild(wordListElement);
       }
     });
     this.containerElement.appendChild(this.listElement);
@@ -42,12 +54,3 @@ class CategoryCardListComponent {
 
 const catalogCardsContainerElement = document.getElementsByClassName('js-word-category-card__category-card-list-component-container')[0];
 const categoryCardListComponent = new CategoryCardListComponent(categoriesMap, catalogCardsContainerElement);
-
-function displayWordCards(wordsMap, cardsContainerElement) {
-  const cardsDocumentFragment = new DocumentFragment();
-  wordsMap.forEach(word => {
-    const wordCardElement = createWordCard(word);
-    cardsDocumentFragment.appendChild(wordCardElement.element);
-  });
-  cardsContainerElement.appendChild(cardsDocumentFragment);
-}

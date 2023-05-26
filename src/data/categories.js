@@ -8,6 +8,10 @@ const categoriesData = [
     imagePath: 'assets/images/bg_for_categories/action2.jpg',
   },
   {
+    categoryName: 'Pets',
+    imagePath: 'assets/images/bg_for_categories/pets.jpg',
+  },
+  {
     categoryName: 'Animal 1',
     imagePath: 'assets/images/bg_for_categories/animal1.jpg',
   },
@@ -20,16 +24,12 @@ const categoriesData = [
     imagePath: 'assets/images/bg_for_categories/body.jpg',
   },
   {
-    categoryName: 'Emotions',
-    imagePath: 'assets/images/bg_for_categories/emotion.jpg',
-  },
-  {
-    categoryName: 'Pets',
-    imagePath: 'assets/images/bg_for_categories/pets.jpg',
-  },
-  {
     categoryName: 'Places',
     imagePath: 'assets/images/bg_for_categories/places.jpg',
+  },
+  {
+    categoryName: 'Emotions',
+    imagePath: 'assets/images/bg_for_categories/emotion.jpg',
   },
 ];
 
