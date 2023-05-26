@@ -229,7 +229,6 @@ body {
 
 @media screen and (min-width: 768px) {
   .word-category-card__list-container {
-    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
@@ -238,12 +237,5 @@ body {
 @media screen and (min-width: 1280px) {
   .word-category-card__section {
     padding-top: 60px;
-  }
-
-  .word-category-card__list-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    row-gap: 25px;
   }
 }
