@@ -1,6 +1,14 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+
+const dataCopyWebpackPlugin = new CopyWebpackPlugin({
+  patterns: [
+    { from: path.join(__dirname, 'src', 'assets', 'images'), to: path.join(__dirname, 'dist', 'assets', 'images') },
+    { from: path.join(__dirname, 'src', 'assets', 'sounds'), to: path.join(__dirname, 'dist', 'assets', 'sounds') },
+  ],
+});
 
 module.exports = {
   entry: path.join(__dirname, 'src', 'index.js'),
@@ -20,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [MiniCSSExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.(png|jpg|jpeg)$/i,
@@ -29,12 +37,13 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
+    new HTMLWebpackPlugin({
       template: path.join(__dirname, 'src', 'index.html'),
     }),
-    new MiniCssExtractPlugin({
+    new MiniCSSExtractPlugin({
       filename: '[name].css',
     }),
+    dataCopyWebpackPlugin,
   ],
   devServer: {
     port: 9000,
