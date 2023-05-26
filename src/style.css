@@ -1,3 +1,5 @@
+@import './assets/reset.css';
+
 body {
   background-image: url('images/bg.png');
 }
@@ -218,14 +220,15 @@ body {
   padding-top: 30px;
 }
 
-.word-category-card__container {
+.word-category-card__list-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 25px;
 }
 
 @media screen and (min-width: 768px) {
-  .word-category-card__container {
+  .word-category-card__list-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -237,7 +240,7 @@ body {
     padding-top: 60px;
   }
 
-  .word-category-card__container {
+  .word-category-card__list-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
