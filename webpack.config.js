@@ -6,6 +6,7 @@ const path = require('path');
 const dataCopyWebpackPlugin = new CopyWebpackPlugin({
   patterns: [
     { from: path.join(__dirname, 'src', 'assets', 'images'), to: path.join(__dirname, 'dist', 'assets', 'images') },
+    { from: path.join(__dirname, 'src', 'assets', 'word-card', 'junkyard', 'turn_button.png'), to: path.join(__dirname, 'dist', 'junkyard') },
     { from: path.join(__dirname, 'src', 'assets', 'sounds'), to: path.join(__dirname, 'dist', 'assets', 'sounds') },
   ],
 });
