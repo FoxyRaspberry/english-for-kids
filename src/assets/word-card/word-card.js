@@ -11,7 +11,7 @@ export function createWordCard({ audio, image, translation, word }) {
       <div class="word-card__description">
         <div class="word-card__word">${word}</div>
         <button class="word-card__turn-button">
-          <img class="word-card__turn-button-image" src="turn_button.png" alt="turn button">
+          <img class="word-card__turn-button-image" src="junkyard/turn_button.png" alt="turn button">
         </button>
       </div>
     </div>
