@@ -5,8 +5,15 @@ import { createWordCard } from './assets/word-card/word-card';
 
 class CategoryCardListComponent {
   constructor(categoriesMap, containerElement) {
+    this.categoriesMap = categoriesMap;
     this.containerElement = containerElement;
     this.initializationView(categoriesMap);
+  }
+
+  // Выводить карточки слов в соответствии с ID категории.
+  displayWordCardsByCategoryID(categoryID) {
+    const wordsMap = this.categoriesMap.get(categoryID).wordsMap;
+    this.displayWordCardsByWordsMap(wordsMap);
   }
 
   // Private.
@@ -30,6 +37,14 @@ class CategoryCardListComponent {
     cardsContainerElement.appendChild(cardsDocumentFragment);
   }
 
+  displayWordCardsByWordsMap(wordsMap) {
+    const wordListElement = document.createElement('div');
+    wordListElement.classList.add('word-card-list__container');
+    this.appendWordCards(wordsMap, wordListElement);
+    this.containerElement.innerHTML = '';
+    this.containerElement.appendChild(wordListElement);
+  }
+
   // Первоначальная подготовка визуального представления.
   initializationView(categoriesMap) {
     this.listElement = document.createElement('div');
@@ -41,16 +56,20 @@ class CategoryCardListComponent {
       const categoryCardElement = pointerEvent.target.closest('.word-category-card__card-element-container');
       if (categoryCardElement) {
         const wordsMap = this.categoriesElementsMap.get(categoryCardElement).wordsMap;
-        this.containerElement.innerHTML = '';
-        const wordListElement = document.createElement('div');
-        wordListElement.classList.add('word-card-list__container');
-        this.appendWordCards(wordsMap, wordListElement);
-        this.containerElement.appendChild(wordListElement);
+        this.displayWordCardsByWordsMap(wordsMap);
       }
     });
     this.containerElement.appendChild(this.listElement);
   }
 }
+
+const navigationListElement = document.getElementsByClassName('navigation__list')[0];
+navigationListElement.addEventListener('click', (pointerEvent) => {
+  const categoryID = +pointerEvent.target.dataset.categoryId;
+  if (categoryID) {
+    categoryCardListComponent.displayWordCardsByCategoryID(categoryID);
+  }
+});
 
 const catalogCardsContainerElement = document.getElementsByClassName('js-word-category-card__category-card-list-component-container')[0];
 const categoryCardListComponent = new CategoryCardListComponent(categoriesMap, catalogCardsContainerElement);
