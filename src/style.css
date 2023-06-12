@@ -87,6 +87,17 @@ body {
   color: whitesmoke;
 }
 
+.navigation__list-item {
+  border-radius: 10px;
+  width: max-content;
+  cursor: pointer;
+}
+
+.navigation__list-item:hover {
+  background: white;
+  color: coral;
+}
+
 .switch__section {
   position: relative;
   width: 121px;
