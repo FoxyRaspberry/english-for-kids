@@ -73,6 +73,7 @@ body {
 
 .navigation__burger-checkbox:checked ~ .navigation__burger-menu {
   left: 0;
+  z-index: 1;
   transition-duration: 1500ms;
 }
 
