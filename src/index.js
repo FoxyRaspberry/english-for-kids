@@ -63,12 +63,27 @@ class CategoryCardListComponent {
   }
 }
 
+// Burger-navigation: закрывать навигацию при выборе категории, выводить на экран выбранную категорию //
 const navigationListElement = document.getElementsByClassName('navigation__list')[0];
 navigationListElement.addEventListener('click', (pointerEvent) => {
   const categoryID = +pointerEvent.target.dataset.categoryId;
   if (categoryID) {
+    burgerCheckboxElement.checked = false;
     categoryCardListComponent.displayWordCardsByCategoryID(categoryID);
   }
+});
+
+function switchBodyScrollable(scrollable) {
+  if (scrollable) {
+    document.body.classList.remove('navigation__section--fix-scroll');
+  } else {
+    document.body.classList.add('navigation__section--fix-scroll');
+  }
+}
+
+const burgerCheckboxElement = document.getElementById('burger-checkbox');
+burgerCheckboxElement.addEventListener('change', (event) => {
+  switchBodyScrollable(!event.target.checked);
 });
 
 const catalogCardsContainerElement = document.getElementsByClassName('js-word-category-card__category-card-list-component-container')[0];
