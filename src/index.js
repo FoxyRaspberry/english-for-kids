@@ -2,6 +2,7 @@ import './style.css';
 import { categoriesMap } from './data/categories';
 import { createWordCategoryCard } from './assets/word-category-card/word-category-card';
 import { createWordCard } from './assets/word-card/word-card';
+import { createWordCardPlayMode } from './assets/word-card-play-mode/word-card-play-mode';
 
 class CategoryCardListComponent {
   constructor(categoriesMap, containerElement) {
@@ -14,6 +15,10 @@ class CategoryCardListComponent {
   displayWordCardsByCategoryID(categoryID) {
     const wordsMap = this.categoriesMap.get(categoryID).wordsMap;
     this.displayWordCardsByWordsMap(wordsMap);
+  }
+
+  changeMode(value) {
+    this.playMode = value;
   }
 
   // Private.
@@ -37,16 +42,31 @@ class CategoryCardListComponent {
     cardsContainerElement.appendChild(cardsDocumentFragment);
   }
 
+  appendWordCardsPlayMode(wordsMap, cardsContainerElement) {
+    const cardsDocumentFragment = new DocumentFragment();
+    wordsMap.forEach(word => {
+      const wordCardElement = createWordCardPlayMode(word);
+      cardsDocumentFragment.appendChild(wordCardElement.element);
+    });
+    cardsContainerElement.appendChild(cardsDocumentFragment);
+  }
+
   displayWordCardsByWordsMap(wordsMap) {
     const wordListElement = document.createElement('div');
     wordListElement.classList.add('word-card-list__container');
-    this.appendWordCards(wordsMap, wordListElement);
+    if (!this.playMode) {
+      this.appendWordCards(wordsMap, wordListElement);
+    }
+    else {
+      this.appendWordCardsPlayMode(wordsMap, wordListElement);
+    }
     this.containerElement.innerHTML = '';
     this.containerElement.appendChild(wordListElement);
   }
 
   // Первоначальная подготовка визуального представления.
   initializationView(categoriesMap) {
+    this.playMode = false;
     this.listElement = document.createElement('div');
     this.listElement.classList.add('word-category-card__list-container');
     this.appendCategoryCards(categoriesMap, this.listElement);
