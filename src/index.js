@@ -11,14 +11,23 @@ class CategoryCardListComponent {
     this.initializationView(categoriesMap);
   }
 
+  changePlayMode(value) {
+    this.playMode = value;
+  }
+
   // Выводить карточки слов в соответствии с ID категории.
   displayWordCardsByCategoryID(categoryID) {
+    // `categoriesMap` содержит ключ - ID, значение - {category}, у значения нужен `wordsMap`.
     const wordsMap = this.categoriesMap.get(categoryID).wordsMap;
     this.displayWordCardsByWordsMap(wordsMap);
   }
 
-  changeMode(value) {
-    this.playMode = value;
+  // Если слово угадано верно, карточка становится неактивной. 
+  markWordCardAsDisabled(wordID) {
+    const hiddenWordCardElement = this.wordIDsToElementsMap.get(wordID);
+    hiddenWordCardElement.style.opacity = 0.5;
+    hiddenWordCardElement.style.cursor = 'not-allowed';
+    this.wordsElementsMarkedAsDisabledSet.add(hiddenWordCardElement);
   }
 
   // Private.
@@ -36,19 +45,48 @@ class CategoryCardListComponent {
   appendWordCards(wordsMap, cardsContainerElement) {
     const cardsDocumentFragment = new DocumentFragment();
     wordsMap.forEach(word => {
-      const wordCardElement = createWordCard(word);
-      cardsDocumentFragment.appendChild(wordCardElement.element);
+      const wordCard = createWordCard(word);
+      cardsDocumentFragment.appendChild(wordCard.element);
     });
     cardsContainerElement.appendChild(cardsDocumentFragment);
   }
 
   appendWordCardsPlayMode(wordsMap, cardsContainerElement) {
+    const wordCardElementCSSClass = `js-word-card`;
     const cardsDocumentFragment = new DocumentFragment();
+    this.wordIDsToElementsMap = new Map();
+    this.wordsElementsMap = new Map();
+    this.wordsElementsMarkedAsDisabledSet = new Set();
     wordsMap.forEach(word => {
-      const wordCardElement = createWordCardPlayMode(word);
-      cardsDocumentFragment.appendChild(wordCardElement.element);
+      const wordCard = createWordCardPlayMode(word);
+      wordCard.element.classList.add(wordCardElementCSSClass);
+      cardsDocumentFragment.appendChild(wordCard.element);
+      this.wordIDsToElementsMap.set(word.id, wordCard.element);
+      this.wordsElementsMap.set(wordCard.element, word);
+    });
+    // Обработать все клики внутри элемента для вывода списка карточек слов.
+    // Клики по карточкам интерпретировать как команду для создания пользовательского события.
+    cardsContainerElement.addEventListener('click', (pointerEvent) => {
+      const wordCardElement = pointerEvent.target.closest(`.${wordCardElementCSSClass}`);
+      // Если этого элемента нет, значит клик не по карточке.
+      if (!wordCardElement) return;
+      // Если карточка неактивна, события не происходят.
+      if (this.wordsElementsMarkedAsDisabledSet.has(wordCardElement)) return;
+      // `wordsElementsMap` содержит ключ - элемент, значение - {word}, у значения нужен `id`.
+      const wordID = this.wordsElementsMap.get(wordCardElement).id;
+      this.dispatchEvent(wordID);
     });
     cardsContainerElement.appendChild(cardsDocumentFragment);
+  }
+
+  // Создать пользовательское событие с данными об ID слова, на карточку которого кликнул пользователь.
+  dispatchEvent(wordID) {
+    const wordCardClickedEvent = new CustomEvent('wordCardClicked', {
+      detail: {
+        wordID: wordID,
+      },
+    });
+    this.containerElement.dispatchEvent(wordCardClickedEvent);
   }
 
   displayWordCardsByWordsMap(wordsMap) {
@@ -75,6 +113,7 @@ class CategoryCardListComponent {
     this.listElement.addEventListener('click', (pointerEvent) => {
       const categoryCardElement = pointerEvent.target.closest('.word-category-card__card-element-container');
       if (categoryCardElement) {
+        // `categoriesElementsMap` содержит ключ - элемент, значение - {category}, у значения нужен `wordsMap`.
         const wordsMap = this.categoriesElementsMap.get(categoryCardElement).wordsMap;
         this.displayWordCardsByWordsMap(wordsMap);
       }
