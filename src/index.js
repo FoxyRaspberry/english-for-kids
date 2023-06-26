@@ -3,6 +3,7 @@ import { categoriesMap } from './data/categories';
 import { createWordCategoryCard } from './assets/word-category-card/word-category-card';
 import { createWordCard } from './assets/word-card/word-card';
 import { createWordCardPlayMode } from './assets/word-card-play-mode/word-card-play-mode';
+import { PlayModeComponent } from './assets/play-mode/play-mode';
 
 class CategoryCardListComponent {
   constructor(categoriesMap, containerElement) {
@@ -74,13 +75,23 @@ class CategoryCardListComponent {
       if (this.wordsElementsMarkedAsDisabledSet.has(wordCardElement)) return;
       // `wordsElementsMap` содержит ключ - элемент, значение - {word}, у значения нужен `id`.
       const wordID = this.wordsElementsMap.get(wordCardElement).id;
-      this.dispatchEvent(wordID);
+      this.dispatchWordCardClickedEvent(wordID);
     });
     cardsContainerElement.appendChild(cardsDocumentFragment);
   }
 
+  // Создать пользовательское событие с данными о категории слов, на карточку которой кликнул пользователь.
+  dispatchCategoryCardClickedEvent(category) {
+    const categoryCardClickedEvent = new CustomEvent('categoryCardClicked', {
+      detail: {
+        category: category,
+      },
+    });
+    this.containerElement.dispatchEvent(categoryCardClickedEvent);
+  }
+
   // Создать пользовательское событие с данными об ID слова, на карточку которого кликнул пользователь.
-  dispatchEvent(wordID) {
+  dispatchWordCardClickedEvent(wordID) {
     const wordCardClickedEvent = new CustomEvent('wordCardClicked', {
       detail: {
         wordID: wordID,
@@ -113,9 +124,10 @@ class CategoryCardListComponent {
     this.listElement.addEventListener('click', (pointerEvent) => {
       const categoryCardElement = pointerEvent.target.closest('.word-category-card__card-element-container');
       if (categoryCardElement) {
-        // `categoriesElementsMap` содержит ключ - элемент, значение - {category}, у значения нужен `wordsMap`.
-        const wordsMap = this.categoriesElementsMap.get(categoryCardElement).wordsMap;
-        this.displayWordCardsByWordsMap(wordsMap);
+        // `categoriesElementsMap` содержит ключ - элемент, значение - {category}, нужен весь объект.
+        const category = this.categoriesElementsMap.get(categoryCardElement);
+        this.dispatchCategoryCardClickedEvent(category);
+        this.displayWordCardsByWordsMap(category.wordsMap);
       }
     });
     this.containerElement.appendChild(this.listElement);
@@ -147,3 +159,24 @@ burgerCheckboxElement.addEventListener('change', (event) => {
 
 const catalogCardsContainerElement = document.getElementsByClassName('js-word-category-card__category-card-list-component-container')[0];
 const categoryCardListComponent = new CategoryCardListComponent(categoriesMap, catalogCardsContainerElement);
+
+// Активировать переключение режимов.
+const switchToggleCheckboxElement = document.getElementById('toggle-checkbox');
+switchToggleCheckboxElement.addEventListener('change', (event) => {
+  categoryCardListComponent.changePlayMode(switchToggleCheckboxElement.checked);
+});
+catalogCardsContainerElement.addEventListener('categoryCardClicked', (customEvent) => {
+  switchToggleCheckboxElement.setAttribute('disabled', 'true');
+  switchToggleCheckboxElement.parentElement.style.opacity = 0.4;
+  switchToggleCheckboxElement.parentElement.style.cursor = 'not-allowed';
+  if (switchToggleCheckboxElement.checked) {
+    const wordsMap = customEvent.detail.category.wordsMap;
+    const playModeControlsContainerElement = document.getElementsByClassName('js-header__play-mode-controls')[0];
+    const playModeComponent = new PlayModeComponent(
+      playModeControlsContainerElement,
+      wordsMap,
+      categoryCardListComponent, 
+      catalogCardsContainerElement,
+    );
+  }
+});
