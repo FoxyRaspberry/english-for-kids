@@ -139,6 +139,11 @@ class CategoryCardListComponent {
   }
 }
 
+const navigationListItemMainPageElement = document.getElementsByClassName('js-navigation__list-item--main-page')[0];
+navigationListItemMainPageElement.addEventListener('click', (pointerEvent) => {
+  goBackToTheMainPage();
+});
+
 // Burger-navigation: закрывать навигацию при выборе категории, выводить на экран выбранную категорию //
 const navigationListElement = document.getElementsByClassName('navigation__list')[0];
 navigationListElement.addEventListener('click', (pointerEvent) => {
