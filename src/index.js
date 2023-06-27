@@ -4,6 +4,11 @@ import { createWordCategoryCard } from './assets/word-category-card/word-categor
 import { createWordCard } from './assets/word-card/word-card';
 import { createWordCardPlayMode } from './assets/word-card-play-mode/word-card-play-mode';
 import { PlayModeComponent } from './assets/play-mode/play-mode';
+import { createGameOverElement } from './assets/game-over/game-over';
+
+function goBackToTheMainPage() {
+  location.reload();
+}
 
 class CategoryCardListComponent {
   constructor(categoriesMap, containerElement) {
@@ -178,5 +183,14 @@ catalogCardsContainerElement.addEventListener('categoryCardClicked', (customEven
       categoryCardListComponent, 
       catalogCardsContainerElement,
     );
+    playModeControlsContainerElement.addEventListener('gameOver', (customEvent) => {
+      const errorCount = customEvent.detail.errorCount;
+      const gameOverElement = createGameOverElement(errorCount);
+      document.body.appendChild(gameOverElement);
+      setTimeout(() => {
+        gameOverElement.remove();
+        goBackToTheMainPage();
+      }, 10000);
+    });
   }
 });
