@@ -57,20 +57,39 @@ export class PlayModeComponent {
     containerElement.appendChild(this.scoresListElement);
   }
 
-  // когда игра окончена:
-  // если все слова угаданы правильно, разыгрывается сигнал «успех», карточки со словами убираются, а на странице отображается радостный смайлик.
-  // если при отгадывании слов были ошибки, проигрывается сигнал «неудача», карточки со словами убираются, а на странице отображается грустный смайлик с количеством ошибок.
-  // после этого приложение автоматически перенаправляет на главную страницу со списком категорий.
-  gameOver() {
+  // Создать пользовательское событие с данными о количестве ошибок.
+  dispatchGameOverEvent(errorCount) {
+    const gameOverEvent = new CustomEvent('gameOver', {
+      detail: {
+        errorCount: errorCount,
+      },
+    });
+    this.playModeControlsContainerElement.dispatchEvent(gameOverEvent);
+  }
 
+  // Завершить игру, посчитать баллы, воспроизвести звук.
+  gameOver() {
+    const errorCount = this.scoresArray
+      .filter((booleanValue) => {
+        return booleanValue ? false : true;
+      })
+      .length;
+    if (errorCount) {
+      this.playSoundFailure();
+    }
+    else {
+      this.playSoundSuccess();
+    }
+    this.dispatchGameOverEvent(errorCount);
   }
 
   initializationView(playModeControlsContainerElement) {
+    this.playModeControlsContainerElement = playModeControlsContainerElement;
     const containerElement = document.createElement('div');
     containerElement.classList.add('play-mode-button__container');
     this.createScoresList(containerElement);
     this.createStartButton(containerElement);
-    playModeControlsContainerElement.appendChild(containerElement);
+    this.playModeControlsContainerElement.appendChild(containerElement);
   }
 
   playSound(sound) {
