@@ -1,0 +1,28 @@
+.game-over__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+}
+
+.game-over__error-image {
+  background: center no-repeat url("failure.jpg");
+  background-size: contain;
+  width: 500px;
+  height: 500px;
+  border-radius: 20px;
+}
+
+.game-over__success-image {
+  background: center no-repeat url("success.jpg");
+  background-size: contain;
+  width: 500px;
+  height: 500px;
+  border-radius: 20px;
+}
