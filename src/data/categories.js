@@ -173,13 +173,13 @@ const wordsByCategories = [
     },
     {
       word: 'caw',
-      translation: 'свинья',
+      translation: 'корова',
       image: 'assets/images/pets/caw.jpg',
       audio: 'assets/sounds/pets/caw.mp3',
     },
     {
       word: 'donkey',
-      translation: 'свинья',
+      translation: 'осёл',
       image: 'assets/images/pets/donkey.jpg',
       audio: 'assets/sounds/pets/donkey.mp3',
     },
@@ -217,7 +217,7 @@ const wordsByCategories = [
     },
     {
       word: 'giraffe',
-      translation: 'жирафа',
+      translation: 'жираф',
       image: 'assets/images/animal1/giraffe.jpg',
       audio: 'assets/sounds/animal1/giraffe.mp3',
     },
@@ -279,7 +279,7 @@ const wordsByCategories = [
     },
     {
       word: 'penguin',
-      translation: 'пенгвин',
+      translation: 'пингвин',
       image: 'assets/images/animal2/penguin.jpg',
       audio: 'assets/sounds/animal2/penguin.mp3',
     },
