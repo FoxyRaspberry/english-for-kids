@@ -2,6 +2,13 @@ import './style.css';
 import { categoriesMap } from './data/categories';
 import { createWordCategoryCard } from './assets/word-category-card/word-category-card';
 import { createWordCard } from './assets/word-card/word-card';
+import { createWordCardPlayMode } from './assets/word-card-play-mode/word-card-play-mode';
+import { PlayModeComponent } from './assets/play-mode/play-mode';
+import { createGameOverElement } from './assets/game-over/game-over';
+
+function goBackToTheMainPage() {
+  location.reload();
+}
 
 class CategoryCardListComponent {
   constructor(categoriesMap, containerElement) {
@@ -10,10 +17,23 @@ class CategoryCardListComponent {
     this.initializationView(categoriesMap);
   }
 
+  changePlayMode(value) {
+    this.playMode = value;
+  }
+
   // Выводить карточки слов в соответствии с ID категории.
   displayWordCardsByCategoryID(categoryID) {
+    // `categoriesMap` содержит ключ - ID, значение - {category}, у значения нужен `wordsMap`.
     const wordsMap = this.categoriesMap.get(categoryID).wordsMap;
     this.displayWordCardsByWordsMap(wordsMap);
+  }
+
+  // Если слово угадано верно, карточка становится неактивной. 
+  markWordCardAsDisabled(wordID) {
+    const hiddenWordCardElement = this.wordIDsToElementsMap.get(wordID);
+    hiddenWordCardElement.style.opacity = 0.5;
+    hiddenWordCardElement.style.cursor = 'not-allowed';
+    this.wordsElementsMarkedAsDisabledSet.add(hiddenWordCardElement);
   }
 
   // Private.
@@ -31,22 +51,76 @@ class CategoryCardListComponent {
   appendWordCards(wordsMap, cardsContainerElement) {
     const cardsDocumentFragment = new DocumentFragment();
     wordsMap.forEach(word => {
-      const wordCardElement = createWordCard(word);
-      cardsDocumentFragment.appendChild(wordCardElement.element);
+      const wordCard = createWordCard(word);
+      cardsDocumentFragment.appendChild(wordCard.element);
     });
     cardsContainerElement.appendChild(cardsDocumentFragment);
+  }
+
+  appendWordCardsPlayMode(wordsMap, cardsContainerElement) {
+    const wordCardElementCSSClass = `js-word-card`;
+    const cardsDocumentFragment = new DocumentFragment();
+    this.wordIDsToElementsMap = new Map();
+    this.wordsElementsMap = new Map();
+    this.wordsElementsMarkedAsDisabledSet = new Set();
+    wordsMap.forEach(word => {
+      const wordCard = createWordCardPlayMode(word);
+      wordCard.element.classList.add(wordCardElementCSSClass);
+      cardsDocumentFragment.appendChild(wordCard.element);
+      this.wordIDsToElementsMap.set(word.id, wordCard.element);
+      this.wordsElementsMap.set(wordCard.element, word);
+    });
+    // Обработать все клики внутри элемента для вывода списка карточек слов.
+    // Клики по карточкам интерпретировать как команду для создания пользовательского события.
+    cardsContainerElement.addEventListener('click', (pointerEvent) => {
+      const wordCardElement = pointerEvent.target.closest(`.${wordCardElementCSSClass}`);
+      // Если этого элемента нет, значит клик не по карточке.
+      if (!wordCardElement) return;
+      // Если карточка неактивна, события не происходят.
+      if (this.wordsElementsMarkedAsDisabledSet.has(wordCardElement)) return;
+      // `wordsElementsMap` содержит ключ - элемент, значение - {word}, у значения нужен `id`.
+      const wordID = this.wordsElementsMap.get(wordCardElement).id;
+      this.dispatchWordCardClickedEvent(wordID);
+    });
+    cardsContainerElement.appendChild(cardsDocumentFragment);
+  }
+
+  // Создать пользовательское событие с данными о категории слов, на карточку которой кликнул пользователь.
+  dispatchCategoryCardClickedEvent(category) {
+    const categoryCardClickedEvent = new CustomEvent('categoryCardClicked', {
+      detail: {
+        category: category,
+      },
+    });
+    this.containerElement.dispatchEvent(categoryCardClickedEvent);
+  }
+
+  // Создать пользовательское событие с данными об ID слова, на карточку которого кликнул пользователь.
+  dispatchWordCardClickedEvent(wordID) {
+    const wordCardClickedEvent = new CustomEvent('wordCardClicked', {
+      detail: {
+        wordID: wordID,
+      },
+    });
+    this.containerElement.dispatchEvent(wordCardClickedEvent);
   }
 
   displayWordCardsByWordsMap(wordsMap) {
     const wordListElement = document.createElement('div');
     wordListElement.classList.add('word-card-list__container');
-    this.appendWordCards(wordsMap, wordListElement);
+    if (!this.playMode) {
+      this.appendWordCards(wordsMap, wordListElement);
+    }
+    else {
+      this.appendWordCardsPlayMode(wordsMap, wordListElement);
+    }
     this.containerElement.innerHTML = '';
     this.containerElement.appendChild(wordListElement);
   }
 
   // Первоначальная подготовка визуального представления.
   initializationView(categoriesMap) {
+    this.playMode = false;
     this.listElement = document.createElement('div');
     this.listElement.classList.add('word-category-card__list-container');
     this.appendCategoryCards(categoriesMap, this.listElement);
@@ -55,13 +129,20 @@ class CategoryCardListComponent {
     this.listElement.addEventListener('click', (pointerEvent) => {
       const categoryCardElement = pointerEvent.target.closest('.word-category-card__card-element-container');
       if (categoryCardElement) {
-        const wordsMap = this.categoriesElementsMap.get(categoryCardElement).wordsMap;
-        this.displayWordCardsByWordsMap(wordsMap);
+        // `categoriesElementsMap` содержит ключ - элемент, значение - {category}, нужен весь объект.
+        const category = this.categoriesElementsMap.get(categoryCardElement);
+        this.dispatchCategoryCardClickedEvent(category);
+        this.displayWordCardsByWordsMap(category.wordsMap);
       }
     });
     this.containerElement.appendChild(this.listElement);
   }
 }
+
+const navigationListItemMainPageElement = document.getElementsByClassName('js-navigation__list-item--main-page')[0];
+navigationListItemMainPageElement.addEventListener('click', (pointerEvent) => {
+  goBackToTheMainPage();
+});
 
 // Burger-navigation: закрывать навигацию при выборе категории, выводить на экран выбранную категорию //
 const navigationListElement = document.getElementsByClassName('navigation__list')[0];
@@ -88,3 +169,33 @@ burgerCheckboxElement.addEventListener('change', (event) => {
 
 const catalogCardsContainerElement = document.getElementsByClassName('js-word-category-card__category-card-list-component-container')[0];
 const categoryCardListComponent = new CategoryCardListComponent(categoriesMap, catalogCardsContainerElement);
+
+// Активировать переключение режимов.
+const switchToggleCheckboxElement = document.getElementById('toggle-checkbox');
+switchToggleCheckboxElement.addEventListener('change', (event) => {
+  categoryCardListComponent.changePlayMode(switchToggleCheckboxElement.checked);
+});
+catalogCardsContainerElement.addEventListener('categoryCardClicked', (customEvent) => {
+  switchToggleCheckboxElement.setAttribute('disabled', 'true');
+  switchToggleCheckboxElement.parentElement.style.opacity = 0.4;
+  switchToggleCheckboxElement.parentElement.style.cursor = 'not-allowed';
+  if (switchToggleCheckboxElement.checked) {
+    const wordsMap = customEvent.detail.category.wordsMap;
+    const playModeControlsContainerElement = document.getElementsByClassName('js-header__play-mode-controls')[0];
+    const playModeComponent = new PlayModeComponent(
+      playModeControlsContainerElement,
+      wordsMap,
+      categoryCardListComponent, 
+      catalogCardsContainerElement,
+    );
+    playModeControlsContainerElement.addEventListener('gameOver', (customEvent) => {
+      const errorCount = customEvent.detail.errorCount;
+      const gameOverElement = createGameOverElement(errorCount);
+      document.body.appendChild(gameOverElement);
+      setTimeout(() => {
+        gameOverElement.remove();
+        goBackToTheMainPage();
+      }, 10000);
+    });
+  }
+});
