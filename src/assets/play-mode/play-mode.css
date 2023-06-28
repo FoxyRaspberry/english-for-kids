@@ -1,7 +1,14 @@
 .play-mode-button__container {
   display: flex;
-  flex-direction: row-reverse;
-  gap: 50px;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 20px 50px;
+}
+
+@media screen and (min-width: 768px) {
+  .play-mode-button__container {
+    flex-direction: row-reverse;
+  }
 }
 
 .play-mode__button-start {

@@ -12,7 +12,7 @@ function createErrorCountContainerElement(errorCount) {
   errorCountContainerElement.classList.add('game-over__container');
   errorCountContainerElement.innerHTML = `
     <div class="game-over__error-image"></div>
-    <h1>Total errors: ${errorCount}</h1>
+    <h1>Total errors: ${errorCount}. Do not give up!</h1>
   `;
   return errorCountContainerElement;
 }
